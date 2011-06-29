@@ -24,7 +24,9 @@ What you need:
 * a soldering iron
 * some solder
 * 3 AA batteries
+
 and for tuning operations:
+
 * a 2-row-6pin-header
 * isp-programmer with a 6pin-isp-cable
 * rs232/ttl-converter (max232 with needed capacitors)
