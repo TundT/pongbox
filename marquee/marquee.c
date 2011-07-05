@@ -56,6 +56,16 @@ uint8_t marquee_nextStep(){
 
 uint8_t writeletter(char c, int8_t pos){
     switch(c){
+        case '1':
+            display_write8(number_1,sizeof(number_1),pos);
+            return(sizeof(number_1));
+        case '2':
+            display_write8(number_2,sizeof(number_2),pos);
+            return(sizeof(number_2));
+        case '3':
+            display_write8(number_3,sizeof(number_3),pos);
+            return(sizeof(number_3));
+
         case 'a':
             display_write8(letter_a,sizeof(letter_a),pos);
             return(sizeof(letter_a));
