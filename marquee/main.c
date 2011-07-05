@@ -6,6 +6,8 @@
 
 #include <avr/io.h>
 
+
+
 #include "marquee.h"
 #include "display.h"
 #include "rs232.h"
@@ -21,11 +23,99 @@ int main(void)
     init_rs232(MYUBRR);
     display_init();
     rs232_puts("# welcome to your marquee terminal \n \r # \n \r #waiting for your text:");
-    marquee_setText("hallo welt! das ist ein langer text zum testen des displays!", 0xFF);
 
     sei();
 
-    _delay_ms(200);
+
+    display_setBlendFactor(0);
+    _delay_ms(300);
+
+    uint8_t i = 0;
+    for(; i<(0xFF-3); i+=4){
+        _delay_ms(7);
+        display_setBlendFactor(i);
+    }
+    display_setBuffer(BUFFER_B);
+    display_clearAll();
+
+    for(; i>4; i-=4){
+        _delay_ms(7);
+        display_setBlendFactor(i);
+    }    
+
+    display_setBuffer(BUFFER_A);
+    display_clearAll();
+    marquee_setText("3", 0xFF);
+    marquee_nextStep();
+    marquee_nextStep();
+    marquee_nextStep();
+    marquee_nextStep();
+    marquee_nextStep();
+    marquee_nextStep();
+    marquee_nextStep();
+    marquee_nextStep();
+
+    for(i = 0; i<(0xFF-3); i+=4){
+        _delay_ms(7);
+        display_setBlendFactor(i);
+    }
+    for(; i>3; i-=4){
+        _delay_ms(7);
+        display_setBlendFactor(i);
+    }    
+
+    display_setBuffer(BUFFER_A);
+    display_clearAll();
+    marquee_setText("2", 0xFF);
+    marquee_nextStep();
+    marquee_nextStep();
+    marquee_nextStep();
+    marquee_nextStep();
+    marquee_nextStep();
+    marquee_nextStep();
+    marquee_nextStep();
+    marquee_nextStep();
+
+    for(; i<(0xFF-3); i+=4){
+        _delay_ms(7);
+        display_setBlendFactor(i);
+    }
+    for(; i>3; i-=4){
+        _delay_ms(7);
+        display_setBlendFactor(i);
+    }    
+
+    display_setBuffer(BUFFER_A);
+    display_clearAll();
+    marquee_setText("1", 0xFF);
+    marquee_nextStep();
+    marquee_nextStep();
+    marquee_nextStep();
+    marquee_nextStep();
+    marquee_nextStep();
+    marquee_nextStep();
+    marquee_nextStep();
+    marquee_nextStep();
+
+    for(i = 0; i<(0xFF-3); i+=4){
+        _delay_ms(7);
+        display_setBlendFactor(i);
+    }
+    for(; i>3; i-=4){
+        _delay_ms(7);
+        display_setBlendFactor(i);
+    } 
+
+
+    display_setBuffer(BUFFER_A);
+    display_clearAll();
+    display_setBlendFactor(255);
+
+
+
+    marquee_setText("hallo welt! das ist ein langer text zum testen des displays!", 0xFF);
+
+    _delay_ms(100);
 
    
 	while(1){

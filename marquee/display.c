@@ -6,8 +6,9 @@
 #include "display.h"
 
 uint8_t columnNr = 0;
+uint8_t blendFactor = 0xFF;
 
-uint16_t buffer[12] = { 0b0000000000,      // column 0
+uint16_t bufferA[12] = {0b0000000000,      // column 0
                         0b0001111100,
                         0b0010000010,
                         0b0100011001,
@@ -20,6 +21,21 @@ uint16_t buffer[12] = { 0b0000000000,      // column 0
                         0b0001111100,
                         0b0000000000};      // column 11;
 
+uint16_t bufferB[12] = {0b1000000001,      // column 0
+                        0b0000000000,
+                        0b0000000000,
+                        0b0000000000,
+                        0b0000000000,
+                        0b0000000000,
+                        0b0000000000,
+                        0b0000000000,
+                        0b0000000000,
+                        0b0000000000,
+                        0b0000000000,
+                        0b1000000001};      // column 11;
+
+uint16_t* buffer = bufferA;
+
 
 inline void writecolumn(uint16_t column){
      PORTC = (PORTC & 0xF0) | (column & 0x0F);
@@ -29,7 +45,21 @@ inline void writecolumn(uint16_t column){
 
 ISR( TIMER2_OVF_vect ){
     cli();
-    writecolumn(buffer[columnNr]); 
+    if(blendFactor != 0)
+        writecolumn(bufferA[columnNr]); 
+    else
+        writecolumn(0x0000);
+
+    
+    sei();
+}
+
+ISR( TIMER2_COMP_vect ){
+    cli();
+    if(blendFactor != 0xFF)
+        writecolumn(bufferB[columnNr]);
+    else
+        writecolumn(0x0000); 
 
     if(columnNr >= 11){
         PORTB = PORTB & 0b11101111; // set Data 0
@@ -39,9 +69,9 @@ ISR( TIMER2_OVF_vect ){
             PORTB = PORTB | 0b00010000; // set Data 1 -> für die nächsten schritte 
         columnNr++;
     }
+
     sei();
 }
-
 
 
 void display_init(void){
@@ -54,8 +84,6 @@ void display_init(void){
     PORTB &= 0xE0;
     
 //    TIMSK = 0x0;    // oder so lassen?
-//    TCCR1A = 0x0;
-//    TCCR1B = 0x0 | 0b101;   // 1024 als teiler
 
     TCNT0 = 0x0;
    
@@ -65,11 +93,35 @@ void display_init(void){
     TCCR2 |= (1<<COM21);                             // Clear OC2 on Compare Match
     //TCCR2 |= (1<<COM21) | (1<<COM20);                // Set OC2 on Compare Match
 
-    OCR2 = 0x7F;         // wert bei dem von 1 auf 0 gewechselt wird....
+    OCR2 = 0x7F;            // wert bei dem von 1 auf 0 gewechselt wird....
 
-    TIMSK |= (1<<TOIE2);       // enable timer2 overflow interrupt
+    TIMSK |= 1<<TOIE2;      // enable Timer/Counter2 Overflow Interrupt
+    TIMSK |= 1<<OCIE2;      // enable Output Compare Match Interrupt
 
     PORTB = PORTB | 0b00000100;  // strobe auf high
+}
+
+void display_setBuffer(uint8_t bufferId){
+
+    if(bufferId == BUFFER_A)
+        buffer = bufferA;
+    else if(bufferId == BUFFER_B)
+        buffer = bufferB;
+}
+
+void display_setBlendFactor(uint8_t bFactor){
+// 255 -> only BufferA is Visible
+//   0 -> only BufferB is Visible
+
+    blendFactor = bFactor;
+
+    if(bFactor <= 0x01)
+        OCR2 = 0x02;
+    else if(bFactor > 0xFD)
+        OCR2 = 0xFD;
+    else
+        OCR2 = bFactor;
+
 }
 
 void display_clear(uint8_t column){
