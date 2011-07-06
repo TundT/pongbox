@@ -45,15 +45,8 @@ int main(void)
 
     display_setBuffer(BUFFER_A);
     display_clearAll();
-    marquee_setText("3", 0xFF);
-    marquee_nextStep();
-    marquee_nextStep();
-    marquee_nextStep();
-    marquee_nextStep();
-    marquee_nextStep();
-    marquee_nextStep();
-    marquee_nextStep();
-    marquee_nextStep();
+    _delay_ms(50);
+    marquee_writeText("3", 0xFF, 4);
 
     for(i = 0; i<(0xFF-3); i+=4){
         _delay_ms(7);
@@ -66,15 +59,8 @@ int main(void)
 
     display_setBuffer(BUFFER_A);
     display_clearAll();
-    marquee_setText("2", 0xFF);
-    marquee_nextStep();
-    marquee_nextStep();
-    marquee_nextStep();
-    marquee_nextStep();
-    marquee_nextStep();
-    marquee_nextStep();
-    marquee_nextStep();
-    marquee_nextStep();
+    _delay_ms(50);
+    marquee_writeText("2", 0xFF, 4);
 
     for(; i<(0xFF-3); i+=4){
         _delay_ms(7);
@@ -87,16 +73,10 @@ int main(void)
 
     display_setBuffer(BUFFER_A);
     display_clearAll();
-    marquee_setText("1", 0xFF);
-    marquee_nextStep();
-    marquee_nextStep();
-    marquee_nextStep();
-    marquee_nextStep();
-    marquee_nextStep();
-    marquee_nextStep();
-    marquee_nextStep();
-    marquee_nextStep();
+    _delay_ms(50);
 
+    marquee_writeText("1", 0xFF, 4);
+   
     for(i = 0; i<(0xFF-3); i+=4){
         _delay_ms(7);
         display_setBlendFactor(i);

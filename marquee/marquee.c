@@ -17,6 +17,15 @@ void marquee_setText(char* pText, uint8_t rep){
     marquee_repetition = rep;
 }
 
+void marquee_writeText(char* pText, uint8_t rep, uint8_t pos){
+    marquee_pos = pos;
+    marquee_text = pText;
+    marquee_actText = pText; 
+    marquee_repetition = rep;
+
+    marquee_nextStep();
+}
+
 uint8_t marquee_nextStep(){
     uint8_t i   = 0;
     int8_t  pos = marquee_pos;
@@ -56,6 +65,9 @@ uint8_t marquee_nextStep(){
 
 uint8_t writeletter(char c, int8_t pos){
     switch(c){
+        case '0':
+            display_write8(number_0,sizeof(number_0),pos);
+            return(sizeof(number_0));
         case '1':
             display_write8(number_1,sizeof(number_1),pos);
             return(sizeof(number_1));
@@ -65,6 +77,24 @@ uint8_t writeletter(char c, int8_t pos){
         case '3':
             display_write8(number_3,sizeof(number_3),pos);
             return(sizeof(number_3));
+        case '4':
+            display_write8(number_4,sizeof(number_4),pos);
+            return(sizeof(number_4));
+        case '5':
+            display_write8(number_5,sizeof(number_5),pos);
+            return(sizeof(number_5));
+        case '6':
+            display_write8(number_6,sizeof(number_6),pos);
+            return(sizeof(number_6));
+        case '7':
+            display_write8(number_7,sizeof(number_7),pos);
+            return(sizeof(number_7));
+        case '8':
+            display_write8(number_8,sizeof(number_8),pos);
+            return(sizeof(number_8));
+        case '9':
+            display_write8(number_9,sizeof(number_9),pos);
+            return(sizeof(number_9));
 
         case 'a':
             display_write8(letter_a,sizeof(letter_a),pos);
